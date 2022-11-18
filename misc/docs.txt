@@ -1,0 +1,14 @@
+User.create({
+    firstName: "vaisakh",
+    lastName: "b",
+    registerNumber: "kh.sc.p2mca21032",
+    email: "vaisakh678@gmail.com",
+    mobile: "7907214132",
+    smartCatching: true,
+    darkMode: true,
+    qrDelay: 3,
+    password: "nasa",
+    type: "admin",
+    disenable: false,
+    register_date: Date.now(),
+});
