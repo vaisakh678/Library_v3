@@ -3,12 +3,12 @@ import { TextField, Stack, IconButton, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 function QrInput({ handleScan }) {
-    const [input, setInput] = useState("");
-    // const [input, setInput] = useState("kh.sc.p2mca21032");
+    // const [input, setInput] = useState("");
+    const [input, setInput] = useState("kh.sc.p2mca21015");
     function handleSubmit(e) {
         e.preventDefault();
         handleScan(input);
-        setInput("");
+        // setInput("");
     }
 
     return (

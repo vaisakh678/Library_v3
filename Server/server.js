@@ -4,6 +4,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
 const User = require("./models/User");
+const Visitor = require("./models/Visitor");
 
 const PORT = 3001;
 const SECRETE_KEY = "636fc6a1559182e8783d0f43";
@@ -90,7 +91,7 @@ app.post("/api/update-user", async (req, res) => {
     }
 });
 
-app.post("/api/checkInOut", async (req, res) => {
+app.post("/api/register-visitor", async (req, res) => {
     const token = req.headers["x-access-token"];
     const decode = jwt.verify(token, SECRETE_KEY);
     if (!decode) {
@@ -99,13 +100,40 @@ app.post("/api/checkInOut", async (req, res) => {
         return;
     }
     try {
-        console.log(req.body);
-        res.json({ status: "ok", data: { status: "checkedOut" } });
+        const isExist = await Visitor.findOne({
+            registerNumber: req.body.registerNumber.toLowerCase(),
+        });
+        if (isExist) {
+            res.json({ status: "ok", exist: true });
+            console.log(
+                `"${req.body.registerNumber}" already exists cannot register..`
+            );
+        } else {
+            await Visitor.create({
+                firstName: req.body.firstName,
+                lastName: req.body.secondName,
+                registerNumber: req.body.registerNumber.toLowerCase(),
+                type: req.body.type,
+                Course: req.body.department,
+                year: req.body.year,
+                department: req.body.department,
+                registerBy: decode.registerNumber,
+                registeredOn: Date.now(),
+                isVisiting: false,
+            });
+            console.log(
+                `"${req.body.registerNumber}" registered successully..`
+            );
+            res.json({ status: "ok", exist: false });
+        }
     } catch (err) {
         res.json({ status: "err" });
         console.log(err);
     }
 });
+
+const checkInOutRouter = require("./Routes/checkInOut");
+app.use("/api/checkInOut", checkInOutRouter);
 
 app.listen(PORT, () => {
     console.log("server is up🚀");

@@ -21,7 +21,6 @@ function Scan() {
     const msgRef = useRef({});
 
     async function handleScan(registerNumber) {
-        // if (e) e.preventDefault();
         const response = await fetch("http://localhost:3001/api/checkInOut", {
             method: "POST",
             headers: {
@@ -35,10 +34,20 @@ function Scan() {
         const data = await response.json();
         msgRef.current.registerNumber = registerNumber;
         if (data.status === "ok") {
-            if (data.data.status === "checkedIn")
+            if (data.data.status === "checkedIn") {
                 msgRef.current.severity = "success";
-            else if (data.data.status === "checkedOut")
+                msgRef.current.toastMessage = `${msgRef.current.registerNumber} has checkedIn`;
+            } else if (data.data.status === "checkedOut") {
                 msgRef.current.severity = "info";
+                msgRef.current.toastMessage = `${msgRef.current.registerNumber} has checkedOut`;
+            } else if (data.data.status === "Timeout") {
+                msgRef.current.severity = "error";
+                msgRef.current.toastMessage = `${msgRef.current.registerNumber} has terminated`;
+            } else if (data.data.status === "notFound") {
+                msgRef.current.severity = "warning";
+                msgRef.current.toastMessage = `${msgRef.current.registerNumber} is not a visitor!`;
+            }
+
             setNotification(true);
             console.log(msgRef.current);
         }
@@ -99,7 +108,7 @@ function Scan() {
                     onClose={() => setNotification(false)}
                     severity={msgRef.current.severity}
                 >
-                    {`${msgRef.current.registerNumber} has Checkedout`}
+                    {msgRef.current.toastMessage}
                 </Alert>
             </Snackbar>
         </div>
