@@ -90,6 +90,23 @@ app.post("/api/update-user", async (req, res) => {
     }
 });
 
+app.post("/api/checkInOut", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const decode = jwt.verify(token, SECRETE_KEY);
+    if (!decode) {
+        res.json({ status: "err", err: "token error" });
+        console.log("token error");
+        return;
+    }
+    try {
+        console.log(req.body);
+        res.json({ status: "ok", data: { status: "checkedOut" } });
+    } catch (err) {
+        res.json({ status: "err" });
+        console.log(err);
+    }
+});
+
 app.listen(PORT, () => {
     console.log("server is up🚀");
 });

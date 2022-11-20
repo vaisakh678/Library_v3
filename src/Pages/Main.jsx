@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SidePanel from "../Components/SidePanel";
 import Search from "./Search";
+import Scan from "./Scan";
 import Settings from "./Settings";
 
 function Main() {
@@ -13,6 +14,7 @@ function Main() {
                 setSelectedOption={setSelectedOption}
             />
             {selectedOption === "search" ? <Search /> : null}
+            {selectedOption === "scan" ? <Scan /> : null}
             {selectedOption === "settings" ? <Settings /> : null}
         </div>
     );

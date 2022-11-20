@@ -9,6 +9,8 @@ import {
     Button,
 } from "@mui/material";
 
+import Test from "../Components/Test";
+
 function Search() {
     const [type, setType] = useState("student");
     return (
@@ -17,8 +19,12 @@ function Search() {
                 Search
             </div>
             <div className="contentContainer flex justify-center p-4 items-center ">
-                <div className="content-wrapper h-full w-full bg-slate-200">
-                    <Stack direction="row" spacing={2}>
+                <div className="content-wrapper h-full w-full bg-slate-200fuck">
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        className="util bg-slate-600fuck"
+                    >
                         <FormControl>
                             <InputLabel id="demo-simple-select-label">
                                 Department
@@ -46,14 +52,19 @@ function Search() {
                             sx={{ width: 150 }}
                         />
 
-                        <Button
-                            variant="contained"
-                            type="submit"
-                            sx={{ width: 100 }}
-                        >
-                            Submit
-                        </Button>
+                        <Stack>
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                sx={{ width: 100 }}
+                            >
+                                Submit
+                            </Button>
+                        </Stack>
                     </Stack>
+                    <div className="util-content bg-slate-20">
+                        <Test />
+                    </div>
                 </div>
             </div>
         </div>
