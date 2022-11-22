@@ -16,7 +16,7 @@ const handleCheckIn = async (visitor, validator) => {
         registerNumber: visitor.registerNumber,
         visitorId: visitor._id,
         verifiedBy: validator,
-        checkin: moment(Date.now()),
+        checkin: Date.now(),
         checkout: null,
         status: "checkedIn",
     });
@@ -27,16 +27,21 @@ const handleCheckIn = async (visitor, validator) => {
             $set: { isVisiting: true, tokenId: token._id },
         }
     );
+
+    console.log(`"${visitor.registerNumber}" has successfully checkedIn`);
 };
 
 const handleCheckOut = async (visitor) => {
     const token = await CheckInOutLog.findOne({
         _id: visitor.tokenId,
     });
-    const diff = Number(
-        moment.utc(moment(Date.now()) - moment(token.checkin)).format("mm")
+    const diff = Math.floor((Date.now() - token.checkin) / 60000);
+    console.log(
+        `checkin time: ${moment(token.checkin).format(
+            "dddd, MMMM Do YYYY, h:mm:ss a"
+        )}`
     );
-    console.log({ diff });
+    console.log(`total time spend: ${diff} Minutes`);
     if (diff <= TIME_OUT) {
         await CheckInOutLog.updateOne(
             {
@@ -44,7 +49,7 @@ const handleCheckOut = async (visitor) => {
             },
             {
                 $set: {
-                    checkout: moment(Date.now()),
+                    checkout: Date.now(),
                     status: "checkedOut",
                 },
             }
@@ -59,6 +64,7 @@ const handleCheckOut = async (visitor) => {
         return 0;
     } else {
         console.log("terminated");
+        return 1;
     }
 };
 
@@ -76,7 +82,7 @@ const handleTimeout = async (visitor) => {
         },
         {
             $set: {
-                checkout: moment(Date.now()),
+                checkout: Date.now(),
                 status: "timeout",
             },
         }
@@ -114,7 +120,6 @@ router.post("/", async (req, res) => {
                 res.json({ status: "ok", data: { status: "Timeout" } });
             }
         } else {
-            console.log("not visiting");
             await handleCheckIn(visitor, decode.registerNumber);
             res.json({ status: "ok", data: { status: "checkedIn" } });
         }
